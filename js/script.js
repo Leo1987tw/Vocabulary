@@ -83,6 +83,15 @@ function drawCard(action, event) {
         // 【完工特訓分支】
         if (action === 'correct') url += `&mode=pool_hard`;   // 點特訓生字
         else if (action === 'wrong') url += `&mode=pool_rand`;   // 點隨機盲刷
+
+        fetchOptions.method = 'POST';
+        fetchOptions.headers = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRF-Token': window.csrfToken || ''
+        };
+        fetchOptions.body = new URLSearchParams({
+            action: action // 讓後端可以抓到 $action 變數
+        });
     } else {
         // 【一般學習分支】裡外完全一致，直接打包 &action=correct 或 wrong 傳給後端
         if (action !== null && currentId !== -1) {
@@ -222,13 +231,13 @@ function fillCardContent(data) {
     const container = document.querySelector('.new');
     if (container) {
         // 只有後端確認是新字，且今日任務尚未完工時才顯示標籤
-        if ((typeof isTaskFinished === 'undefined' || !isTaskFinished) && 
+        if ((typeof isTaskFinished === 'undefined' || !isTaskFinished) &&
             data.isNew === true) {
-            
+
             container.innerText = 'NEW';
         } else {
             // 舊字複習、生字特訓 (pool_hard)、隨機盲刷 (pool_rand) 一律清空，物理上消滅 NEW！
-            container.innerText = ''; 
+            container.innerText = '';
         }
     }
 }
