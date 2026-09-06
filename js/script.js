@@ -83,6 +83,11 @@ function drawCard(action, event) {
         // 【完工特訓分支】
         if (action === 'correct') url += `&mode=pool_hard`;   // 點特訓生字
         else if (action === 'wrong') url += `&mode=pool_rand`;   // 點隨機盲刷
+        fetchOptions.method = 'POST';
+        fetchOptions.headers = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRF-Token': window.csrfToken || ''
+        };
         fetchOptions.body = new URLSearchParams({
             action: action // 讓後端可以抓到 $action 變數
         });
